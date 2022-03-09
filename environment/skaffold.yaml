@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta25
+kind: Config
+# build:
+#   artifacts:
+#     - image: postgres:13
+deploy:
+  kubectl:
+    manifests:
+      - k8s/*.yaml
+portForward:
+  - resourceType: service
+    resourceName: mypage-db
+    port: 5432
+    localPort: 5432
