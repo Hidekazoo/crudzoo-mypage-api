@@ -1,12 +1,28 @@
-use actix_web::{get, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use crudzoo_mypage_api::auth::jwt::{get_token, validate_token};
-use serde::{Serialize};
+use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+
+use rust_auth0_practice::auth::jwt::{get_token, validate_token};
+use serde::{Deserialize, Serialize};
 use dotenv::dotenv;
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Claims {
+    aud: String,
+    exp: usize,
+    iss: String,
+}
 
-#[derive(Serialize)]
-struct UnauthorizedErrorResponse {
-    message: String,
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
+}
+
+#[post("/echo")]
+async fn echo(req_body: String) -> impl Responder {
+    HttpResponse::Ok().body(req_body)
+}
+
+async fn manual_hello() -> impl Responder {
+    HttpResponse::Ok().body("Hey there!")
 }
 
 #[derive(Serialize)]
@@ -19,9 +35,13 @@ struct PostResponse {
     metadata: Metadata,
     text: String,
 }
+#[derive(Serialize)]
+struct UnauthorizedErrorResponse {
+    message: String,
+}
 
 #[get("/post")]
-async fn auth_test(req: HttpRequest) -> impl Responder {
+async fn auth2(req: HttpRequest) -> impl Responder {
     let jwt = match get_token(&req) {
         Ok(v) => v,
         _ => return HttpResponse::Ok().body(format!("invalid token")),
@@ -34,7 +54,7 @@ async fn auth_test(req: HttpRequest) -> impl Responder {
                         api: "test".to_string(),
                         buranch: "test".to_string(),
                     },
-                    text: "test".to_string(),
+                    text: "aabbb".to_string(),
                 });
             }
         }
@@ -48,12 +68,16 @@ async fn auth_test(req: HttpRequest) -> impl Responder {
         message: "invalid token".to_string(),
     });
 }
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     HttpServer::new(|| {
         App::new()
-            .service(auth_test)
+            .service(hello)
+            .service(echo)
+            .route("/hey", web::get().to(manual_hello))
+            .service(auth2)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
