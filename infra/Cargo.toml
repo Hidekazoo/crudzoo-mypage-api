@@ -9,3 +9,4 @@ edition = "2021"
 domain = {path = "../domain" }
 async-trait = "0.1.52"
 sqlx = {version = "0.5.11", default-features = false, features = [ "runtime-actix-rustls", "macros", "postgres", "uuid", "chrono", "migrate", "offline"] }
+chrono = "0.4.19"

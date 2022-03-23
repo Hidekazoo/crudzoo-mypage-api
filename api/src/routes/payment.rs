@@ -1,12 +1,14 @@
-use crate::adaptor::PaymentTypeRepository;
+use crate::adaptor::{PaymentRepository, PaymentTypeRepository};
 use crate::auth::jwt::{get_token, validate_token};
 use actix_web::http::StatusCode;
 use actix_web::{web, HttpRequest, HttpResponse, Responder};
-use domain::interface::PaymentTypeUsecase;
+use domain::interface::{AddPayment, PaymentTypeUsecase, PaymentUsecase};
 use domain::usecase;
 use infra::Database;
 use serde::Serialize;
 use sqlx::PgPool;
+use domain::errors::PaymentError;
+use domain::usecase::PaymentInteractor;
 
 #[derive(Serialize)]
 struct UnauthorizedErrorResponse {
@@ -53,11 +55,63 @@ pub async fn get_payment_types(req: HttpRequest, pool: web::Data<PgPool>) -> Htt
         }
         Err(_) => {
             return HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
-                message: "invalid token23".to_string(),
+                message: "invalid token".to_string(),
             })
         }
     }
     HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
-        message: "invalid token22".to_string(),
+        message: "invalid token".to_string(),
+    })
+}
+
+#[derive(serde::Deserialize)]
+pub struct AddPaymentFormData {
+    pub payment_type_id: i32,
+    pub user_id: i32,
+    pub amount: i32,
+}
+
+pub async fn add_payment(req: HttpRequest, pool: web::Data<PgPool>, form: web::Form<AddPaymentFormData>) -> HttpResponse {
+    let jwt = match get_token(&req) {
+        Ok(v) => v,
+        _ => {
+            return HttpResponse::new(StatusCode::UNAUTHORIZED);
+        }
+    };
+    match validate_token(&jwt) {
+        Ok(v) => {
+            if v {
+                let connection_pool = pool.into_inner();
+                let db = Database {
+                    pool: connection_pool,
+                };
+                let adaptor = PaymentRepository { db };
+                let interactor = PaymentInteractor;
+
+                let params = AddPayment {
+                    payment_type_id: form.payment_type_id,
+                    user_id: form.user_id,
+                    amount: form.amount,
+                };
+                //
+                return match interactor.add_payment(&adaptor, &params).await {
+                    Ok(_) => HttpResponse::Ok().finish(),
+                    Err(PaymentError::PaymentCreationError) => {
+                        HttpResponse::InternalServerError().finish()
+                    },
+                    Err(e) => {
+                        HttpResponse::InternalServerError().finish()
+                    }
+                }
+            }
+        }
+        Err(_) => {
+            return HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
+                message: "invalid token".to_string(),
+            })
+        }
+    }
+    HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
+        message: "invalid token".to_string(),
     })
 }

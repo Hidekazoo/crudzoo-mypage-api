@@ -1,11 +1,14 @@
 use crate::entity::PaymentType;
 use crate::errors::PaymentError;
-use crate::interface::PaymentTypeDao;
+use crate::interface::{AddPayment, PaymentDao, PaymentTypeDao, PaymentUsecase};
 use crate::interface::PaymentTypeUsecase;
 use async_trait::async_trait;
 
 #[derive(Debug)]
 pub struct PaymentTypeInteractor;
+
+#[derive(Debug)]
+pub struct PaymentInteractor;
 
 #[async_trait(?Send)]
 impl PaymentTypeUsecase for PaymentTypeInteractor {
@@ -21,11 +24,20 @@ impl PaymentTypeUsecase for PaymentTypeInteractor {
     }
 }
 
+#[async_trait(?Send)]
+impl PaymentUsecase for PaymentInteractor {
+    async fn add_payment(&self, payment_dao: &dyn PaymentDao, params: &AddPayment) -> Result<(), PaymentError> {
+        payment_dao.add_payment(params).await?;
+        Ok(())
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::entity::PaymentTypeId;
-    use crate::interface::MockPaymentTypeDao;
+    use crate::entity::{Payment, PaymentTypeId};
+    use crate::interface::{MockPaymentTypeDao, MockPaymentDao, AddPayment};
 
     #[tokio::test]
     async fn test_get_payment_types_success() {
@@ -52,5 +64,35 @@ mod tests {
         let result = interactor.get_payment_types(&mock).await;
 
         assert_eq!(result, Err(PaymentError::UnexpectedError));
+    }
+
+    #[tokio::test]
+    async fn test_add_payment_success() {
+        let mut mock = MockPaymentDao::new();
+        mock.expect_add_payment().return_const(Ok(()));
+        let payment = AddPayment {
+            payment_type_id: 2,
+            user_id: 1,
+            amount: 900
+        };
+        let interactor = PaymentInteractor;
+        let result = interactor.add_payment(&mock, &payment).await;
+        assert_eq!(result.ok(), Some(()));
+    }
+
+    #[tokio::test]
+    async fn test_create_user_fail() {
+        let mut mock = MockPaymentDao::new();
+        mock.expect_add_payment().return_const(Err(PaymentError::UnexpectedError));
+
+        let payment = AddPayment {
+            payment_type_id: 2,
+            user_id: 1,
+            amount: 900
+        };
+
+        let interactor = PaymentInteractor;
+        let result = interactor.add_payment(&mock, &payment).await;
+        assert_eq!(result.err(), Some(PaymentError::UnexpectedError));
     }
 }

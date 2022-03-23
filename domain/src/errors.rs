@@ -1,10 +1,9 @@
-// #[derive(Eq, PartialEq, Clone, Debug)]
 
-// #[derive(Clone, thiserror::Error)]
 #[derive(Clone, PartialEq)]
 pub enum PaymentError {
     // #[error(transparent)]
     // UnexpectedError(#[from] anyhow::Error),
+    PaymentCreationError,
     UnexpectedError,
 }
 impl std::fmt::Debug for PaymentError {
