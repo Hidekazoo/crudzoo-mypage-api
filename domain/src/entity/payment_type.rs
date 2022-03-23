@@ -1,4 +1,3 @@
-
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub struct PaymentTypeId(pub i32);
 
@@ -7,4 +6,3 @@ pub struct PaymentType {
     pub id: PaymentTypeId,
     pub name: String,
 }
-

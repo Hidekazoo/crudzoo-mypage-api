@@ -1,9 +1,8 @@
 use actix_web::{web, HttpRequest, HttpResponse, Responder};
-use sqlx::postgres::PgPoolOptions;
-use std::net::TcpListener;
 use api::configuration::get_configuration;
 use api::startup::run;
-
+use sqlx::postgres::PgPoolOptions;
+use std::net::TcpListener;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

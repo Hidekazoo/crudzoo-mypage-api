@@ -1,5 +1,5 @@
 use crate::configuration::{DatabaseSettings, Settings};
-use crate::routes::{get_payment_types};
+use crate::routes::{create_user, get_payment_types};
 use actix_cors::Cors;
 use actix_web::dev::Server;
 use actix_web::{http, web, App, HttpServer};
@@ -7,18 +7,9 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
-use crate::container::Container;
-use infra::db::Database;
-use crate::adaptor::PaymentTypeRepository;
 
 pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io::Error> {
-    // let dba = Database {
-    //     pool: connection.clone()
-    // };
     let connection = web::Data::new(connection);
-
-    // let adaptor = PaymentTypeRepository { db };
-    // let connection = web::Data::new(connection);
     let server = HttpServer::new(move || {
         App::new()
             .wrap(
@@ -33,6 +24,7 @@ pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io:
             .wrap(TracingLogger::default())
             // .route("/post", web::get().to(auth_test))
             .route("/payment_type", web::get().to(get_payment_types))
+            .route("/user", web::post().to(create_user))
             .app_data(connection.clone())
     })
     .listen(listener)?

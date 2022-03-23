@@ -1,4 +1,7 @@
-mod payment;
 mod db;
-pub use payment::*;
+mod payment;
+mod user;
+
 pub use db::*;
+pub use payment::*;
+pub use user::*;

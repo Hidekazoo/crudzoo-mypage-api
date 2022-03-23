@@ -1,6 +1,6 @@
-pub mod routes;
+pub mod adaptor;
 pub mod auth;
-pub mod startup;
 pub mod configuration;
 pub mod container;
-pub mod adaptor;
+pub mod routes;
+pub mod startup;
