@@ -16,6 +16,7 @@ async fn main() -> std::io::Result<()> {
         "{}:{}",
         configuration.application.host, configuration.application.port
     );
+    println!("Start Process!");
     let listener = TcpListener::bind(address)?;
     run(listener, connection_pool)?.await
 }
