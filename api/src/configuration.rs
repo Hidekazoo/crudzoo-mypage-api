@@ -42,6 +42,7 @@ impl DatabaseSettings {
         } else {
             PgSslMode::Prefer
         };
+        self.connection_debug();
         PgConnectOptions::new()
             .host(&self.host)
             .username(&self.username)
@@ -51,6 +52,12 @@ impl DatabaseSettings {
     }
     pub fn with_db(&self) -> PgConnectOptions {
         self.without_db().database(&self.database_name)
+    }
+    pub fn connection_debug(&self) -> String {
+        format!(
+            "Failed to connect to Postgres user:{}, host:{}, port:{}, dbname: {}",
+            self.username, self.host, self.port, self.database_name
+        )
     }
 }
 
