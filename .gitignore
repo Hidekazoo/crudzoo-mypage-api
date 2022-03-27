@@ -2,4 +2,4 @@ target
 .env
 .idea
 
-api/configuration
+api/configuration/local.yaml

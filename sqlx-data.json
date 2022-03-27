@@ -1,0 +1,55 @@
+{
+  "db": "PostgreSQL",
+  "472f7cd885ec1a1e30d285f681f7c1b5088057f894aca02f6e95c6b4e842cb72": {
+    "query": "\n        SELECT id, name\n        FROM payment_type\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int4"
+        },
+        {
+          "ordinal": 1,
+          "name": "name",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false
+      ]
+    }
+  },
+  "b4c751c79db32f340cf44dee91ec1b055a8a90f6af552a9750f95e14764201ba": {
+    "query": "\n            INSERT INTO users (email) VALUES ($1)\n        ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "f79a3dfec8263fcb49cd282755815187941ac714ed974a76feee1230a616a549": {
+    "query": "\n            INSERT INTO payment (payment_type_id, user_id, amount, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)\n        ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      },
+      "nullable": []
+    }
+  }
+}
