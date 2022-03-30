@@ -14,7 +14,7 @@ pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io:
         App::new()
             .wrap(
                 Cors::default()
-                    .allowed_origin("http://localhost:4200")
+                    .allowed_origin("http://localhost:8788")
                     .allowed_methods(vec!["GET", "POST", "OPTIONS"])
                     .allowed_headers(&[http::header::AUTHORIZATION, http::header::ACCEPT])
                     .allowed_header(http::header::CONTENT_TYPE)
