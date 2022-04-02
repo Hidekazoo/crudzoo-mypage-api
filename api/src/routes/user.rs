@@ -1,5 +1,3 @@
-
-
 use crate::adaptor::{PaymentTypeRepository, UserRepository};
 use crate::auth::jwt::{get_token, validate_token};
 use actix_web::http::StatusCode;
@@ -17,11 +15,14 @@ struct UnauthorizedErrorResponse {
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
-    email: String
+    email: String,
 }
 
-
-pub async fn create_user(req: HttpRequest, pool: web::Data<PgPool>, form: web::Form<FormData>) -> HttpResponse {
+pub async fn create_user(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    form: web::Form<FormData>,
+) -> HttpResponse {
     let jwt = match get_token(&req) {
         Ok(v) => v,
         _ => {

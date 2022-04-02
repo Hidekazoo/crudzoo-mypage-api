@@ -1,4 +1,3 @@
-
 #[derive(Clone, PartialEq)]
 pub enum PaymentError {
     // #[error(transparent)]

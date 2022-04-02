@@ -5,7 +5,7 @@ database:
   port: 5432
   username: "postgres"
   password: "password"
-  database_name: "crd_mypage"
+  database_name: "mypage"
   socket: ""
   require_ssl: false
 auth0_settings:

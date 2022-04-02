@@ -1,4 +1,4 @@
-use crate::entity::{PaymentType, Payment};
+use crate::entity::{Payment, PaymentType};
 use crate::errors::PaymentError;
 use async_trait::async_trait;
 use mockall::*;
@@ -26,7 +26,7 @@ pub trait PaymentTypeUsecase {
 pub struct AddPayment {
     pub payment_type_id: i32,
     pub user_id: i32,
-    pub amount: i32
+    pub amount: i32,
 }
 
 #[async_trait(?Send)]
@@ -34,6 +34,6 @@ pub trait PaymentUsecase {
     async fn add_payment(
         &self,
         payment_dao: &dyn PaymentDao,
-        params: &AddPayment
+        params: &AddPayment,
     ) -> Result<(), PaymentError>;
 }

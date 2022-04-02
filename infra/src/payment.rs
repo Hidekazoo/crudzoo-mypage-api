@@ -28,7 +28,7 @@ pub async fn add_payment(
     pool: &PgPool,
     payment_type_id: &i32,
     user_id: &i32,
-    amount: &i32
+    amount: &i32,
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"

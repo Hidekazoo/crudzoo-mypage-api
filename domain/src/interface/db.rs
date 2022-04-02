@@ -10,5 +10,10 @@ pub struct GetPaymentType {
 pub trait DB {
     async fn get_payment_types(&self) -> Result<Vec<GetPaymentType>, PaymentError>;
     async fn create_user(&self, email: &str) -> Result<(), UserError>;
-    async fn add_payment(&self, payment_type_id: &i32, user_id: &i32, amount: &i32) -> Result<(), PaymentError>;
+    async fn add_payment(
+        &self,
+        payment_type_id: &i32,
+        user_id: &i32,
+        amount: &i32,
+    ) -> Result<(), PaymentError>;
 }

@@ -1,4 +1,4 @@
-use crate::payment::{get_payment_types as db_get_payment_type, add_payment as db_add_payment};
+use crate::payment::{add_payment as db_add_payment, get_payment_types as db_get_payment_type};
 use domain::interface::DB;
 use sqlx::PgPool;
 use std::sync::Arc;
@@ -24,10 +24,15 @@ impl DB for Database {
             _ => Err(UserError::UnexpectedError),
         }
     }
-    async fn add_payment(&self, payment_type_id: &i32, user_id: &i32, amount: &i32) -> Result<(), PaymentError> {
+    async fn add_payment(
+        &self,
+        payment_type_id: &i32,
+        user_id: &i32,
+        amount: &i32,
+    ) -> Result<(), PaymentError> {
         match db_add_payment(&self.pool, payment_type_id, user_id, amount).await {
             Ok(_) => Ok(()),
-            _ => Err(PaymentError::PaymentCreationError)
+            _ => Err(PaymentError::PaymentCreationError),
         }
     }
 }

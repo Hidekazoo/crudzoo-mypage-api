@@ -1,7 +1,7 @@
 use crate::entity::PaymentType;
 use crate::errors::PaymentError;
-use crate::interface::{AddPayment, PaymentDao, PaymentTypeDao, PaymentUsecase};
 use crate::interface::PaymentTypeUsecase;
+use crate::interface::{AddPayment, PaymentDao, PaymentTypeDao, PaymentUsecase};
 use async_trait::async_trait;
 
 #[derive(Debug)]
@@ -26,18 +26,21 @@ impl PaymentTypeUsecase for PaymentTypeInteractor {
 
 #[async_trait(?Send)]
 impl PaymentUsecase for PaymentInteractor {
-    async fn add_payment(&self, payment_dao: &dyn PaymentDao, params: &AddPayment) -> Result<(), PaymentError> {
+    async fn add_payment(
+        &self,
+        payment_dao: &dyn PaymentDao,
+        params: &AddPayment,
+    ) -> Result<(), PaymentError> {
         payment_dao.add_payment(params).await?;
         Ok(())
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::entity::{Payment, PaymentTypeId};
-    use crate::interface::{MockPaymentTypeDao, MockPaymentDao, AddPayment};
+    use crate::interface::{AddPayment, MockPaymentDao, MockPaymentTypeDao};
 
     #[tokio::test]
     async fn test_get_payment_types_success() {
@@ -73,7 +76,7 @@ mod tests {
         let payment = AddPayment {
             payment_type_id: 2,
             user_id: 1,
-            amount: 900
+            amount: 900,
         };
         let interactor = PaymentInteractor;
         let result = interactor.add_payment(&mock, &payment).await;
@@ -83,12 +86,13 @@ mod tests {
     #[tokio::test]
     async fn test_create_user_fail() {
         let mut mock = MockPaymentDao::new();
-        mock.expect_add_payment().return_const(Err(PaymentError::UnexpectedError));
+        mock.expect_add_payment()
+            .return_const(Err(PaymentError::UnexpectedError));
 
         let payment = AddPayment {
             payment_type_id: 2,
             user_id: 1,
-            amount: 900
+            amount: 900,
         };
 
         let interactor = PaymentInteractor;

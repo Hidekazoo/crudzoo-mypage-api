@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    aud: String,
     pub exp: i64,
-    iss: String,
+    _permissions: Option<HashSet<String>>,
 }

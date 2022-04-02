@@ -10,22 +10,28 @@ pub fn get_token(req: &HttpRequest) -> Result<String, bool> {
         .headers()
         .get("authorization")
         .map(|x| x.to_str().unwrap_or_default().to_string());
-    let token = authorization.unwrap();
-    let mut split_token = token.split(" ");
-    match split_token.next() {
-        None => return Err(false),
-        Some(schema_type) => {
-            if schema_type != "Bearer" {
-                return Err(false);
-            }
-        }
-    };
-    let jwt = match split_token.next() {
-        None => return Err(false),
-        Some(jwt) => jwt,
-    };
+    match authorization {
+        Some(v) => {
+            let mut split_token = v.split(" ");
 
-    Ok(jwt.to_string())
+            match split_token.next() {
+                None => return Err(false),
+                Some(schema_type) => {
+                    if schema_type != "Bearer" {
+                        return Err(false);
+                    }
+                }
+            };
+
+            let jwt = match split_token.next() {
+                None => return Err(false),
+                Some(jwt) => jwt,
+            };
+
+            Ok(jwt.to_string())
+        }
+        _ => Err(false),
+    }
 }
 
 // fn get_key() -> Result<JwkSet, Box<dyn std::error::Error>> {
@@ -60,6 +66,9 @@ pub fn validate_token(token: &str) -> Result<bool, bool> {
             }
             Ok(false)
         }
-        Err(_) => Err(false),
+        Err(e) => {
+            println!("invalid token {:?}", e);
+            Err(false)
+        }
     }
 }

@@ -33,7 +33,8 @@ mod tests {
     #[tokio::test]
     async fn test_create_user_fail() {
         let mut mock = MockUserDao::new();
-        mock.expect_create_user().return_const(Err(UserError::UnexpectedError));
+        mock.expect_create_user()
+            .return_const(Err(UserError::UnexpectedError));
         let interactor = UserInteractor;
         let result = interactor.create_user(&mock, "test@example.com").await;
         assert_eq!(result.err(), Some(UserError::UnexpectedError));

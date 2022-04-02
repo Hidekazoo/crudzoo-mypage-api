@@ -2,13 +2,13 @@ use crate::adaptor::{PaymentRepository, PaymentTypeRepository};
 use crate::auth::jwt::{get_token, validate_token};
 use actix_web::http::StatusCode;
 use actix_web::{web, HttpRequest, HttpResponse, Responder};
+use domain::errors::PaymentError;
 use domain::interface::{AddPayment, PaymentTypeUsecase, PaymentUsecase};
 use domain::usecase;
+use domain::usecase::PaymentInteractor;
 use infra::Database;
 use serde::Serialize;
 use sqlx::PgPool;
-use domain::errors::PaymentError;
-use domain::usecase::PaymentInteractor;
 
 #[derive(Serialize)]
 struct UnauthorizedErrorResponse {
@@ -71,7 +71,11 @@ pub struct AddPaymentFormData {
     pub amount: i32,
 }
 
-pub async fn add_payment(req: HttpRequest, pool: web::Data<PgPool>, form: web::Form<AddPaymentFormData>) -> HttpResponse {
+pub async fn add_payment(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    form: web::Form<AddPaymentFormData>,
+) -> HttpResponse {
     let jwt = match get_token(&req) {
         Ok(v) => v,
         _ => {
@@ -98,11 +102,9 @@ pub async fn add_payment(req: HttpRequest, pool: web::Data<PgPool>, form: web::F
                     Ok(_) => HttpResponse::Ok().finish(),
                     Err(PaymentError::PaymentCreationError) => {
                         HttpResponse::InternalServerError().finish()
-                    },
-                    Err(e) => {
-                        HttpResponse::InternalServerError().finish()
                     }
-                }
+                    Err(e) => HttpResponse::InternalServerError().finish(),
+                };
             }
         }
         Err(_) => {
