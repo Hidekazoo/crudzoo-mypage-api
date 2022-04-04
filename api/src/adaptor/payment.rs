@@ -1,8 +1,7 @@
 use async_trait::async_trait;
-use domain::entity::{PaymentType, PaymentTypeId};
+use domain::entity::{Payment, PaymentId, PaymentType, PaymentTypeId, UserId};
 use domain::errors::PaymentError;
-use domain::errors::PaymentError::PaymentCreationError;
-use domain::interface::{AddPayment, PaymentDao, PaymentTypeDao, DB};
+use domain::interface::{AddPayment, FindPaymentParams, PaymentDao, PaymentTypeDao, DB};
 
 #[derive(Copy, Clone)]
 pub struct PaymentTypeRepository<T: DB> {
@@ -40,5 +39,18 @@ impl<T: DB> PaymentDao for PaymentRepository<T> {
             Err(PaymentError::PaymentCreationError) => Err(PaymentError::PaymentCreationError),
             _ => Err(PaymentError::UnexpectedError),
         }
+    }
+    async fn find_payment(&self, params: &FindPaymentParams) -> Result<Vec<Payment>, PaymentError> {
+        let result = self.db.find_payment(&params.user_id).await?;
+        let mut e = Vec::new();
+        for i in result {
+            e.push(Payment {
+                id: PaymentId(i.id),
+                user_id: UserId(params.user_id),
+                payment_type_id: PaymentTypeId(i.payment_type_id),
+                amount: i.amount,
+            });
+        }
+        Ok(e)
     }
 }

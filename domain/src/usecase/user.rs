@@ -1,4 +1,3 @@
-use crate::entity::User;
 use crate::errors::UserError;
 use crate::interface::{UserDao, UserUsecase};
 use async_trait::async_trait;

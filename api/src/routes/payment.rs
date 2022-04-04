@@ -1,9 +1,9 @@
 use crate::adaptor::{PaymentRepository, PaymentTypeRepository};
 use crate::auth::jwt::{get_token, validate_token};
 use actix_web::http::StatusCode;
-use actix_web::{web, HttpRequest, HttpResponse, Responder};
+use actix_web::{web, HttpRequest, HttpResponse};
 use domain::errors::PaymentError;
-use domain::interface::{AddPayment, PaymentTypeUsecase, PaymentUsecase};
+use domain::interface::{AddPayment, FindPaymentParams, PaymentTypeUsecase, PaymentUsecase};
 use domain::usecase;
 use domain::usecase::PaymentInteractor;
 use infra::Database;
@@ -24,6 +24,18 @@ struct PaymentType {
 #[derive(serde::Serialize)]
 struct GetPaymentTypesResponse {
     payment_types: Vec<PaymentType>,
+}
+
+#[derive(serde::Serialize)]
+struct Payment {
+    id: i32,
+    payment_type_id: i32,
+    amount: i32,
+}
+
+#[derive(serde::Serialize)]
+struct FindPaymentResponse {
+    payment: Vec<Payment>,
 }
 
 pub async fn get_payment_types(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
@@ -74,7 +86,7 @@ pub struct AddPaymentFormData {
 pub async fn add_payment(
     req: HttpRequest,
     pool: web::Data<PgPool>,
-    form: web::Form<AddPaymentFormData>,
+    form: web::Json<AddPaymentFormData>,
 ) -> HttpResponse {
     let jwt = match get_token(&req) {
         Ok(v) => v,
@@ -103,8 +115,53 @@ pub async fn add_payment(
                     Err(PaymentError::PaymentCreationError) => {
                         HttpResponse::InternalServerError().finish()
                     }
-                    Err(e) => HttpResponse::InternalServerError().finish(),
+                    Err(_) => HttpResponse::InternalServerError().finish(),
                 };
+            }
+        }
+        Err(_) => {
+            return HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
+                message: "invalid token".to_string(),
+            })
+        }
+    }
+    HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
+        message: "invalid token".to_string(),
+    })
+}
+
+pub async fn find_payment(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    path: web::Path<i32>,
+) -> HttpResponse {
+    let jwt = match get_token(&req) {
+        Ok(v) => v,
+        _ => {
+            return HttpResponse::new(StatusCode::UNAUTHORIZED);
+        }
+    };
+    match validate_token(&jwt) {
+        Ok(v) => {
+            if v {
+                let connection_pool = pool.into_inner();
+                let db = Database {
+                    pool: connection_pool,
+                };
+                let adaptor = PaymentRepository { db };
+                let user_id = path.into_inner();
+                let params = FindPaymentParams { user_id };
+                let interactor = usecase::PaymentInteractor;
+                let result = interactor.find_payment(&adaptor, &params).await.unwrap();
+                let mut payment = vec![];
+                for v in result.clone() {
+                    payment.push(Payment {
+                        id: v.id.0,
+                        payment_type_id: v.payment_type_id.0,
+                        amount: v.amount,
+                    })
+                }
+                return HttpResponse::Ok().json(FindPaymentResponse { payment });
             }
         }
         Err(_) => {

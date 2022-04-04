@@ -3,3 +3,4 @@ target
 .idea
 
 api/configuration/local.yaml
+.DS_Store

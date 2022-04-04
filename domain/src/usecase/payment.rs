@@ -1,7 +1,7 @@
-use crate::entity::PaymentType;
+use crate::entity::{Payment,PaymentType};
 use crate::errors::PaymentError;
 use crate::interface::PaymentTypeUsecase;
-use crate::interface::{AddPayment, PaymentDao, PaymentTypeDao, PaymentUsecase};
+use crate::interface::{AddPayment, PaymentDao, PaymentTypeDao, PaymentUsecase, FindPaymentParams};
 use async_trait::async_trait;
 
 #[derive(Debug)]
@@ -34,6 +34,21 @@ impl PaymentUsecase for PaymentInteractor {
         payment_dao.add_payment(params).await?;
         Ok(())
     }
+    async fn find_payment(
+        &self,
+        payment_dao: &dyn PaymentDao,
+        params: &FindPaymentParams
+    ) -> Result<Vec<Payment>, PaymentError> {
+        match payment_dao.find_payment(params).await {
+            Ok(v) => {
+                Ok(v)
+            },
+            _ => {
+                Err(PaymentError::FindPaymentError)
+            }
+        }
+    }
+
 }
 
 #[cfg(test)]

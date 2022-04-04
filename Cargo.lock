@@ -260,6 +260,7 @@ dependencies = [
  "serde-aux",
  "sqlx",
  "thiserror",
+ "tokio",
  "tracing-actix-web",
  "uuid",
 ]

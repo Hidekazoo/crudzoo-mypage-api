@@ -64,7 +64,14 @@ impl DatabaseSettings {
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let mut settings = config::Config::default();
     let base_path = std::env::current_dir().expect("Failed to determine the current directory");
-    let configuration_directory = base_path.join("api/configuration");
+    let mut last_path = base_path.clone();
+    last_path.pop();
+    let mut directory_path = "configuration";
+    if last_path.join("api") != base_path {
+        directory_path = "api/configuration";
+    }
+    let configuration_directory = base_path.join(directory_path.to_string());
+
 
     settings.merge(config::File::from(configuration_directory.join("base")).required(true))?;
 
@@ -105,13 +112,3 @@ impl TryFrom<String> for Environment {
         }
     }
 }
-
-// pub fn get_configuration() -> Result<Auth0Settings, Error> {
-//     let config = match envy::from_env::<Auth0Settings>() {
-//         Ok(config) => config,
-//         Err(error) => {
-//             return Err(error);
-//         }
-//     };
-//     Ok(config)
-// }

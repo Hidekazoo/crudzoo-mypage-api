@@ -3,6 +3,7 @@ pub enum PaymentError {
     // #[error(transparent)]
     // UnexpectedError(#[from] anyhow::Error),
     PaymentCreationError,
+    FindPaymentError,
     UnexpectedError,
 }
 impl std::fmt::Debug for PaymentError {

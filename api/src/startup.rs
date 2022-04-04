@@ -1,5 +1,5 @@
 use crate::configuration::{DatabaseSettings, Settings};
-use crate::routes::{add_payment, create_user, get_payment_types};
+use crate::routes::{add_payment, create_user, find_payment, get_payment_types};
 use actix_cors::Cors;
 use actix_web::dev::Server;
 use actix_web::{http, web, App, HttpServer};
@@ -22,10 +22,10 @@ pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io:
                     .max_age(3600),
             )
             .wrap(TracingLogger::default())
-            // .route("/post", web::get().to(auth_test))
             .route("/payment_type", web::get().to(get_payment_types))
             .route("/user", web::post().to(create_user))
             .route("/payment", web::post().to(add_payment))
+            .route("/user/{id}/payment", web::get().to(find_payment))
             .app_data(connection.clone())
     })
     .listen(listener)?

@@ -1,4 +1,3 @@
-use actix_web::{web, HttpRequest, HttpResponse, Responder};
 use api::configuration::get_configuration;
 use api::startup::run;
 use sqlx::postgres::PgPoolOptions;

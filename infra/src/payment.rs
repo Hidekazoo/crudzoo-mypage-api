@@ -42,3 +42,33 @@ pub async fn add_payment(
     ).execute(pool).await?;
     Ok(())
 }
+
+pub struct FindPayment {
+    pub id: i32,
+    pub payment_type_id: i32,
+    pub amount: i32
+}
+
+pub async fn find_payment(
+    pool: &PgPool,
+    user_id: &i32,
+) -> Result<Vec<FindPayment>, sqlx::Error> {
+    let mut payment = vec![];
+    let mut result = sqlx::query!(
+        r#"
+            SELECT id, payment_type_id, amount FROM payment WHERE user_id = $1
+        "#,
+        user_id
+    ).fetch_all(pool)
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|rec| FindPayment {
+            id: rec.id,
+            payment_type_id: rec.payment_type_id,
+            amount: rec.amount
+        })
+        .collect();
+    payment.append(&mut result);
+    Ok(payment)
+}

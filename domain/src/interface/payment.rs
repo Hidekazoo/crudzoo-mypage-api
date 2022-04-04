@@ -13,6 +13,7 @@ pub trait PaymentTypeDao {
 #[async_trait(?Send)]
 pub trait PaymentDao {
     async fn add_payment(&self, params: &AddPayment) -> Result<(), PaymentError>;
+    async fn find_payment(&self, params: &FindPaymentParams) -> Result<Vec<Payment>, PaymentError>;
 }
 
 #[async_trait(?Send)]
@@ -29,6 +30,10 @@ pub struct AddPayment {
     pub amount: i32,
 }
 
+pub struct FindPaymentParams {
+    pub user_id: i32
+}
+
 #[async_trait(?Send)]
 pub trait PaymentUsecase {
     async fn add_payment(
@@ -36,4 +41,9 @@ pub trait PaymentUsecase {
         payment_dao: &dyn PaymentDao,
         params: &AddPayment,
     ) -> Result<(), PaymentError>;
+    async fn find_payment(
+        &self,
+        payment_dao: &dyn PaymentDao,
+        params: &FindPaymentParams,
+    ) -> Result<Vec<Payment>, PaymentError>;
 }
