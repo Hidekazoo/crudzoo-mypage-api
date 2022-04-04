@@ -24,6 +24,38 @@
       ]
     }
   },
+  "6225a13aff54092afc164df84a11b650dd20f1ba059fb5ab5116aecf91806c42": {
+    "query": "\n            SELECT id, payment_type_id, amount FROM payment WHERE user_id = $1\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int4"
+        },
+        {
+          "ordinal": 1,
+          "name": "payment_type_id",
+          "type_info": "Int4"
+        },
+        {
+          "ordinal": 2,
+          "name": "amount",
+          "type_info": "Int4"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "b4c751c79db32f340cf44dee91ec1b055a8a90f6af552a9750f95e14764201ba": {
     "query": "\n            INSERT INTO users (email) VALUES ($1)\n        ",
     "describe": {
