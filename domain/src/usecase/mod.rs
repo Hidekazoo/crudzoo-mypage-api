@@ -1,6 +1,6 @@
+mod book;
 mod payment;
 mod user;
-mod book;
+pub use book::*;
 pub use payment::*;
 pub use user::*;
-pub use book::*;

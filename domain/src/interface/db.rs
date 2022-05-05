@@ -10,7 +10,7 @@ pub struct FindPayment {
     pub id: i32,
     pub payment_type_id: i32,
     pub amount: i32,
-    pub creation_date: String
+    pub creation_date: String,
 }
 
 #[async_trait]
@@ -23,10 +23,7 @@ pub trait DB {
         user_id: &i32,
         amount: &i32,
     ) -> Result<(), PaymentError>;
-    async fn find_payment(
-        &self,
-        user_id: &i32,
-    ) -> Result<Vec<FindPayment>, PaymentError>;
+    async fn find_payment(&self, user_id: &i32) -> Result<Vec<FindPayment>, PaymentError>;
 }
 
 #[async_trait]

@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use crate::helpers::spawn_app;
-use reqwest::header::{AUTHORIZATION};
+use reqwest::header::AUTHORIZATION;
+use std::collections::HashMap;
 
 #[tokio::test]
 async fn get_payment_type_requests_missing_authorization_are_rejected() {

@@ -72,7 +72,6 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     }
     let configuration_directory = base_path.join(directory_path.to_string());
 
-
     settings.merge(config::File::from(configuration_directory.join("base")).required(true))?;
 
     let environment: Environment = std::env::var("APP_ENVIRONMENT")

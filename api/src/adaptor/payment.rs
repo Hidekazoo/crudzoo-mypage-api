@@ -49,7 +49,7 @@ impl<T: DB> PaymentDao for PaymentRepository<T> {
                 user_id: UserId(params.user_id),
                 payment_type_id: PaymentTypeId(i.payment_type_id),
                 amount: i.amount,
-                creation_date: i.creation_date
+                creation_date: i.creation_date,
             });
         }
         Ok(e)

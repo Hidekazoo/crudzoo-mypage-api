@@ -3,7 +3,6 @@ use api::startup::{get_connection_pool, Application};
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
-
 pub struct TestApp {
     pub address: String,
     pub port: u16,

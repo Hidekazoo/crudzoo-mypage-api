@@ -1,4 +1,4 @@
-use crate::adaptor::{UserRepository};
+use crate::adaptor::UserRepository;
 use crate::auth::jwt::{get_token, validate_token};
 use actix_web::http::StatusCode;
 use actix_web::{web, HttpRequest, HttpResponse};

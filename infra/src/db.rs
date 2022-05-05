@@ -1,5 +1,8 @@
-use crate::payment::{add_payment as db_add_payment, get_payment_types as db_get_payment_type, find_payment as db_find_payment};
-use domain::interface::{DB, FindPayment};
+use crate::payment::{
+    add_payment as db_add_payment, find_payment as db_find_payment,
+    get_payment_types as db_get_payment_type,
+};
+use domain::interface::{FindPayment, DB};
 use sqlx::PgPool;
 use std::sync::Arc;
 
@@ -44,13 +47,13 @@ impl DB for Database {
                         id: i.id,
                         payment_type_id: i.payment_type_id,
                         amount: i.amount,
-                        creation_date: i.creation_date
+                        creation_date: i.creation_date,
                     };
                     result.push(item);
                 }
                 Ok(result)
-            },
-            _ => Err(PaymentError::FindPaymentError)
+            }
+            _ => Err(PaymentError::FindPaymentError),
         }
     }
 }

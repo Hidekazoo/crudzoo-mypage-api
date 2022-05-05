@@ -31,7 +31,7 @@ pub struct AddPayment {
 }
 
 pub struct FindPaymentParams {
-    pub user_id: i32
+    pub user_id: i32,
 }
 
 #[async_trait(?Send)]

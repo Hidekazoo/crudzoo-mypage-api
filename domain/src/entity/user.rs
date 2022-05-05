@@ -1,4 +1,3 @@
-
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub struct UserId(pub i32);
 

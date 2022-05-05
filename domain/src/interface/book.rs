@@ -1,4 +1,3 @@
-
 use crate::errors::BookError;
 use async_trait::async_trait;
 use mockall::*;

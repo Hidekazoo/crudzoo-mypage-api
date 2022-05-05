@@ -9,5 +9,5 @@ pub struct Payment {
     pub user_id: UserId,
     pub payment_type_id: PaymentTypeId,
     pub amount: i32,
-    pub creation_date: String
+    pub creation_date: String,
 }

@@ -31,7 +31,7 @@ struct Payment {
     id: i32,
     payment_type_id: i32,
     amount: i32,
-    creation_date: String
+    creation_date: String,
 }
 
 #[derive(serde::Serialize)]
@@ -118,10 +118,12 @@ pub async fn add_payment(
                 };
                 //
                 return match interactor.add_payment(&adaptor, &params).await {
-                    Ok(_) => HttpResponse::Ok().content_type("application/json").json(AddPaymentResponse {
-                        payment_type_id: form.payment_type_id,
-                        amount: form.amount,
-                    }),
+                    Ok(_) => HttpResponse::Ok().content_type("application/json").json(
+                        AddPaymentResponse {
+                            payment_type_id: form.payment_type_id,
+                            amount: form.amount,
+                        },
+                    ),
                     Err(PaymentError::PaymentCreationError) => {
                         HttpResponse::InternalServerError().finish()
                     }
@@ -169,7 +171,7 @@ pub async fn find_payment(
                         id: v.id.0,
                         payment_type_id: v.payment_type_id.0,
                         amount: v.amount,
-                        creation_date: v.creation_date
+                        creation_date: v.creation_date,
                     })
                 }
                 return HttpResponse::Ok().json(FindPaymentResponse { payment });

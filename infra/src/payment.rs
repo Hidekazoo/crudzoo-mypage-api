@@ -47,13 +47,10 @@ pub struct FindPayment {
     pub id: i32,
     pub payment_type_id: i32,
     pub amount: i32,
-    pub creation_date: String
+    pub creation_date: String,
 }
 
-pub async fn find_payment(
-    pool: &PgPool,
-    user_id: &i32,
-) -> Result<Vec<FindPayment>, sqlx::Error> {
+pub async fn find_payment(pool: &PgPool, user_id: &i32) -> Result<Vec<FindPayment>, sqlx::Error> {
     let mut payment = vec![];
     let mut result = sqlx::query!(
         r#"

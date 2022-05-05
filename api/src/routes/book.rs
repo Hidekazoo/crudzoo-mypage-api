@@ -1,9 +1,8 @@
-use crate::auth::jwt::{get_token, validate_token};
-use actix_web::http::StatusCode;
-use actix_web::{web, HttpRequest, HttpResponse};
+use crate::auth::claims::Claims;
+use actix_web::{web, HttpResponse};
 use domain::interface::{AddBookParams, BookUsecase};
-use domain::usecase::{BookInteractor};
-use infra::{BookDriver};
+use domain::usecase::BookInteractor;
+use infra::BookDriver;
 use serde::Serialize;
 use sqlx::PgPool;
 
@@ -18,42 +17,23 @@ pub struct FormData {
 }
 
 pub async fn add_book(
-    req: HttpRequest,
+    _claims: Claims,
+    // req: HttpRequest,
     pool: web::Data<PgPool>,
     form: web::Json<FormData>,
 ) -> HttpResponse {
-    let jwt = match get_token(&req) {
-        Ok(v) => v,
-        _ => {
-            return HttpResponse::new(StatusCode::UNAUTHORIZED);
-        }
+    let connection_pool = pool.into_inner();
+    let book_driver = BookDriver {
+        pool: connection_pool,
     };
-    match validate_token(&jwt) {
-        Ok(v) => {
-            if v {
-                let connection_pool = pool.into_inner();
-                let book_driver = BookDriver {
-                  pool: connection_pool
-                };
-                let interactor = BookInteractor;
-                let params = AddBookParams {
-                    name: form.name.clone()
-                };
-                return match interactor.add_book(&book_driver, &params).await {
-                    Ok(_) => HttpResponse::Ok().finish(),
-                    _ => HttpResponse::BadRequest().json(ErrorResponse {
-                        message: "Failed to create book data".to_string()
-                    }),
-                }
-            }
-        }
-        Err(_) => {
-            return HttpResponse::Unauthorized().json(ErrorResponse {
-                message: "invalid token".to_string(),
-            })
-        }
-    }
-    HttpResponse::Unauthorized().json(ErrorResponse {
-        message: "invalid token".to_string(),
-    })
+    let interactor = BookInteractor;
+    let params = AddBookParams {
+        name: form.name.clone(),
+    };
+    return match interactor.add_book(&book_driver, &params).await {
+        Ok(_) => HttpResponse::Ok().finish(),
+        _ => HttpResponse::BadRequest().json(ErrorResponse {
+            message: "Failed to create book data".to_string(),
+        }),
+    };
 }

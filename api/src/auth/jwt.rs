@@ -72,3 +72,38 @@ pub fn validate_token(token: &str) -> Result<bool, bool> {
         }
     }
 }
+
+pub enum ValidationError {
+    TokenExpired,
+    InvalidToken,
+    Unexpected,
+}
+
+pub fn validate_jwt_token(token: &str) -> Result<Claims, ValidationError> {
+    let config = get_configuration().unwrap();
+    let mut validation = Validation::new(Algorithm::RS256);
+    validation.set_audience(&[config.auth0_settings.audience]);
+    validation.set_issuer(&[Uri::builder()
+        .scheme("https")
+        .authority(config.auth0_settings.domain)
+        .path_and_query("/")
+        .build()
+        .unwrap()]);
+
+    if let Ok(key) =
+        DecodingKey::from_rsa_components(&config.auth0_settings.rsa_n, &config.auth0_settings.rsa_e)
+    {
+        return match decode::<Claims>(token, &key, &validation) {
+            Ok(c) => {
+                let now = Utc::now().timestamp();
+                if c.claims.exp - now >= 3600 {
+                    // 1時間
+                    return Ok(c.claims);
+                }
+                Err(ValidationError::TokenExpired)
+            }
+            Err(_) => Err(ValidationError::InvalidToken),
+        };
+    }
+    Err(ValidationError::Unexpected)
+}
