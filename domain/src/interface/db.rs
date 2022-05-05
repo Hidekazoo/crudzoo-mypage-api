@@ -1,4 +1,4 @@
-use crate::errors::{PaymentError, UserError};
+use crate::errors::{BookError, PaymentError, UserError};
 use async_trait::async_trait;
 
 pub struct GetPaymentType {
@@ -9,7 +9,8 @@ pub struct GetPaymentType {
 pub struct FindPayment {
     pub id: i32,
     pub payment_type_id: i32,
-    pub amount: i32
+    pub amount: i32,
+    pub creation_date: String
 }
 
 #[async_trait]
@@ -26,4 +27,9 @@ pub trait DB {
         &self,
         user_id: &i32,
     ) -> Result<Vec<FindPayment>, PaymentError>;
+}
+
+#[async_trait]
+pub trait BookDriver {
+    async fn add_book(&self, book_name: &str) -> Result<(), BookError>;
 }

@@ -43,7 +43,8 @@ impl DB for Database {
                     let item = FindPayment {
                         id: i.id,
                         payment_type_id: i.payment_type_id,
-                        amount: i.amount
+                        amount: i.amount,
+                        creation_date: i.creation_date
                     };
                     result.push(item);
                 }

@@ -46,7 +46,8 @@ pub async fn add_payment(
 pub struct FindPayment {
     pub id: i32,
     pub payment_type_id: i32,
-    pub amount: i32
+    pub amount: i32,
+    pub creation_date: String
 }
 
 pub async fn find_payment(
@@ -56,7 +57,7 @@ pub async fn find_payment(
     let mut payment = vec![];
     let mut result = sqlx::query!(
         r#"
-            SELECT id, payment_type_id, amount FROM payment WHERE user_id = $1
+            SELECT id, payment_type_id, amount, to_char(created_at, 'YYYY-MM-dd') as creation_date FROM payment WHERE user_id = $1
         "#,
         user_id
     ).fetch_all(pool)
@@ -66,7 +67,8 @@ pub async fn find_payment(
         .map(|rec| FindPayment {
             id: rec.id,
             payment_type_id: rec.payment_type_id,
-            amount: rec.amount
+            amount: rec.amount,
+            creation_date: rec.creation_date.unwrap(),
         })
         .collect();
     payment.append(&mut result);

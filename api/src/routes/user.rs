@@ -44,11 +44,11 @@ pub async fn create_user(
         }
         Err(_) => {
             return HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
-                message: "invalid token23".to_string(),
+                message: "invalid token".to_string(),
             })
         }
     }
     HttpResponse::Unauthorized().json(UnauthorizedErrorResponse {
-        message: "invalid token22".to_string(),
+        message: "invalid token".to_string(),
     })
 }

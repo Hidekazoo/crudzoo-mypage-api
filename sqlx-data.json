@@ -18,14 +18,11 @@
       "parameters": {
         "Left": []
       },
-      "nullable": [
-        false,
-        false
-      ]
+      "nullable": [false, false]
     }
   },
-  "6225a13aff54092afc164df84a11b650dd20f1ba059fb5ab5116aecf91806c42": {
-    "query": "\n            SELECT id, payment_type_id, amount FROM payment WHERE user_id = $1\n        ",
+  "8f5942a9d655f5d6300c7d5921743a2d247d3b629340f4889ee5d3d40e18658f": {
+    "query": "\n            SELECT id, payment_type_id, amount, to_char(created_at, 'YYYY-MM-dd') as creation_date FROM payment WHERE user_id = $1\n        ",
     "describe": {
       "columns": [
         {
@@ -42,18 +39,17 @@
           "ordinal": 2,
           "name": "amount",
           "type_info": "Int4"
+        },
+        {
+          "ordinal": 3,
+          "name": "creation_date",
+          "type_info": "Text"
         }
       ],
       "parameters": {
-        "Left": [
-          "Int4"
-        ]
+        "Left": ["Int4"]
       },
-      "nullable": [
-        false,
-        false,
-        false
-      ]
+      "nullable": [false, false, false, null]
     }
   },
   "b4c751c79db32f340cf44dee91ec1b055a8a90f6af552a9750f95e14764201ba": {
@@ -61,9 +57,17 @@
     "describe": {
       "columns": [],
       "parameters": {
-        "Left": [
-          "Text"
-        ]
+        "Left": ["Text"]
+      },
+      "nullable": []
+    }
+  },
+  "ed66fb658b2008ee72e478c02d7bfacb43eb4422f44db084ebf7f42687f6a978": {
+    "query": "\n        INSERT INTO books (title, created_at, updated_at) VALUES ($1, $2, $3)\n    ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": ["Text", "Timestamptz", "Timestamptz"]
       },
       "nullable": []
     }
@@ -73,13 +77,7 @@
     "describe": {
       "columns": [],
       "parameters": {
-        "Left": [
-          "Int4",
-          "Int4",
-          "Int4",
-          "Timestamptz",
-          "Timestamptz"
-        ]
+        "Left": ["Int4", "Int4", "Int4", "Timestamptz", "Timestamptz"]
       },
       "nullable": []
     }

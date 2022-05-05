@@ -22,3 +22,14 @@ impl std::fmt::Debug for UserError {
         write!(f, "{:?}", self)
     }
 }
+
+#[derive(Clone, PartialEq)]
+pub enum BookError {
+    UnexpectedError,
+}
+
+impl std::fmt::Debug for BookError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
