@@ -34,45 +34,6 @@ pub fn get_token(req: &HttpRequest) -> Result<String, bool> {
     }
 }
 
-// fn get_key() -> Result<JwkSet, Box<dyn std::error::Error>> {
-//     let response = reqwest::blocking::get(&format!("https://crudzoo.auth0.com/.well-known/jwks.json"))?;
-//     let body = response.text()?;
-//     let result: JwkSet = serde_json::from_str(&body)?;
-//     Ok(result)
-// }
-
-pub fn validate_token(token: &str) -> Result<bool, bool> {
-    let config = get_configuration().unwrap();
-    let mut validation = Validation::new(Algorithm::RS256);
-    validation.set_audience(&[config.auth0_settings.audience]);
-    validation.set_issuer(&[Uri::builder()
-        .scheme("https")
-        .authority(config.auth0_settings.domain)
-        .path_and_query("/")
-        .build()
-        .unwrap()]);
-
-    let key = DecodingKey::from_rsa_components(
-        &config.auth0_settings.rsa_n,
-        &config.auth0_settings.rsa_e,
-    )
-    .unwrap();
-    match decode::<Claims>(token, &key, &validation) {
-        Ok(c) => {
-            let now = Utc::now().timestamp();
-            if c.claims.exp - now >= 3600 {
-                // 1時間
-                return Ok(true);
-            }
-            Ok(false)
-        }
-        Err(e) => {
-            println!("invalid token {:?}", e);
-            Err(false)
-        }
-    }
-}
-
 pub enum ValidationError {
     TokenExpired,
     InvalidToken,
