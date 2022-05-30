@@ -1,6 +1,7 @@
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::postgres::{PgConnectOptions, PgSslMode};
+use std::path::PathBuf;
 
 #[derive(serde::Deserialize, Clone)]
 pub struct Settings {
@@ -63,13 +64,24 @@ impl DatabaseSettings {
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let mut settings = config::Config::default();
-    let base_path = std::env::current_dir().expect("Failed to determine the current directory");
+    let mut base_path = std::env::current_dir().expect("Failed to determine the current directory");
+    let environment: Environment = std::env::var("APP_ENVIRONMENT")
+        .unwrap_or_else(|_| "local".into())
+        .try_into()
+        .expect("Failed to parse APP_ENVIRONMENT.");
+    
     let mut last_path = base_path.clone();
     last_path.pop();
     let mut directory_path = "configuration";
     if last_path.join("api") != base_path {
         directory_path = "api/configuration";
     }
+
+    if environment.as_str() == "production" {
+        base_path = PathBuf::new();
+        base_path.push("/app")
+    }
+
     let configuration_directory = base_path.join(directory_path.to_string());
 
     settings.merge(config::File::from(configuration_directory.join("base")).required(true))?;

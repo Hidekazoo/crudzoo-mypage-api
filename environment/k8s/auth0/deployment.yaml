@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth0-mock
+spec:
+  selector:
+    matchLabels:
+      app: auth0-mock
+  template:
+    metadata:
+      labels:
+        app: auth0-mock
+    spec:
+      containers:
+        - name: auth0-mock
+          image: wiremock/wiremock:2.33.2
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080

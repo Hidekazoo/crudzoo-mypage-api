@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./deployment.yaml
+      - ./service.yaml
+portForward:
+  - resourceType: service
+    resourceName: mypage-db
+    port: 5432
+    localPort: 5432
