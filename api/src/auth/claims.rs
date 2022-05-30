@@ -22,7 +22,7 @@ impl FromRequest for Claims {
                 Ok(v) => v,
                 _ => return Err(ErrorUnauthorized("this route is protected")),
             };
-            match validate_jwt_token(&jwt) {
+            match validate_jwt_token(&jwt).await {
                 Ok(v) => Ok(v),
                 Err(ValidationError::TokenExpired) => {
                     Err(ErrorUnauthorized("The access token expired."))

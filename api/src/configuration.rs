@@ -19,8 +19,6 @@ pub struct ApplicationSettings {
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct Auth0Settings {
-    pub rsa_n: String,
-    pub rsa_e: String,
     pub audience: String,
     pub domain: String,
 }

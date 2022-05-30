@@ -9,7 +9,5 @@ database:
   socket: ""
   require_ssl: false
 auth0_settings:
-  rsa_n: ""
-  rsa_e: ""
   audience: ""
   domain: ""
