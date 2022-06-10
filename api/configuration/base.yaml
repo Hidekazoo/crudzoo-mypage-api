@@ -10,4 +10,5 @@ database:
   require_ssl: false
 auth0_settings:
   audience: ""
+  issuer: ""
   domain: ""

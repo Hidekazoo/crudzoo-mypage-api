@@ -21,6 +21,7 @@ pub struct ApplicationSettings {
 pub struct Auth0Settings {
     pub audience: String,
     pub domain: String,
+    pub issuer: String
 }
 
 #[derive(serde::Deserialize, Clone)]

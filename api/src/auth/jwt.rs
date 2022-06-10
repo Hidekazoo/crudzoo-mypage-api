@@ -65,13 +65,7 @@ pub async fn validate_jwt_token(
             AlgorithmParameters::RSA(ref rsa) => {
                 let mut validation = Validation::new(Algorithm::RS256);
                 validation.set_audience(&[config.auth0_settings.audience]);
-                validation.set_issuer(&[config.auth0_settings.domain]);
-                // validation.set_issuer(&[Uri::builder()
-                //     .scheme("https")
-                //     .authority(config.auth0_settings.domain.clone())
-                //     .path_and_query("/")
-                //     .build()
-                //     .unwrap()]);
+                validation.set_issuer(&[config.auth0_settings.issuer]);
                 if let Ok(key) = DecodingKey::from_rsa_components(
                     &rsa.n,
                     &rsa.e,
