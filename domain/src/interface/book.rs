@@ -8,7 +8,7 @@ pub struct AddBookParams {
 
 #[automock]
 #[async_trait(?Send)]
-pub trait BookDao {
+pub trait BookPort {
     async fn add_book(&self, params: &AddBookParams) -> Result<(), BookError>;
 }
 
@@ -16,7 +16,7 @@ pub trait BookDao {
 pub trait BookUsecase {
     async fn add_book(
         &self,
-        book_dao: &dyn BookDao,
+        book_port: &dyn BookPort,
         params: &AddBookParams,
     ) -> Result<(), BookError>;
 }

@@ -56,24 +56,22 @@ pub async fn validate_jwt_token(
         ValidationError::DecodeError
     })?;
     let token: String = token.to_string();
-    // Box::pin(async move {
-
         let jwks: JwkSet = Client::new()
-            .get(format!( "https://{}/.well-known/jwks.json", config.auth0_settings.domain))
+            .get(format!( "{}", config.auth0_settings.domain))
             .send()
             .await.unwrap().json().await.unwrap();
         let jwk = jwks.find(&kid).ok_or(ValidationError::DecodeError)?;
-
         match jwk.clone().algorithm {
             AlgorithmParameters::RSA(ref rsa) => {
                 let mut validation = Validation::new(Algorithm::RS256);
                 validation.set_audience(&[config.auth0_settings.audience]);
-                validation.set_issuer(&[Uri::builder()
-                    .scheme("https")
-                    .authority(config.auth0_settings.domain.clone())
-                    .path_and_query("/")
-                    .build()
-                    .unwrap()]);
+                validation.set_issuer(&[config.auth0_settings.domain]);
+                // validation.set_issuer(&[Uri::builder()
+                //     .scheme("https")
+                //     .authority(config.auth0_settings.domain.clone())
+                //     .path_and_query("/")
+                //     .build()
+                //     .unwrap()]);
                 if let Ok(key) = DecodingKey::from_rsa_components(
                     &rsa.n,
                     &rsa.e,
@@ -87,11 +85,15 @@ pub async fn validate_jwt_token(
                             }
                             Err(ValidationError::TokenExpired)
                         }
-                        Err(_) => Err(ValidationError::InvalidToken),
+                        Err(e) => {
+                            return Err(ValidationError::InvalidToken) 
+                               },
                     };
                 }
                 Err(ValidationError::InvalidToken)
             }
-            _ => Err(ValidationError::Unexpected)
+            e => {
+                Err(ValidationError::Unexpected) 
+            }
         }
 }
