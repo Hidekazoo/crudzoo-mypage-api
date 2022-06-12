@@ -20,8 +20,7 @@ impl FromRequest for Claims {
         Box::pin(async move {
             let jwt = match get_token(&request) {
                 Ok(v) => v,
-                _ => {
-                    return Err(ErrorUnauthorized("this route is protected"))},
+                _ => return Err(ErrorUnauthorized("this route is protected")),
             };
             match validate_jwt_token(&jwt).await {
                 Ok(v) => Ok(v),

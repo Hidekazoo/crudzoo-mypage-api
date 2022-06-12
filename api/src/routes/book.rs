@@ -2,8 +2,8 @@ use crate::auth::claims::Claims;
 use actix_web::{web, HttpResponse};
 use domain::interface::{AddBookParams, BookUsecase};
 use domain::usecase::BookInteractor;
-use infra::gateway::BookGateway;
 use infra::driver::BookDriverImpl;
+use infra::gateway::BookGateway;
 use serde::Serialize;
 use sqlx::PgPool;
 
@@ -26,8 +26,8 @@ pub async fn add_book(
     let connection_pool = pool.into_inner();
     let book_port = BookGateway {
         book_driver: BookDriverImpl {
-            pool: connection_pool
-        }
+            pool: connection_pool,
+        },
     };
     let interactor = BookInteractor;
     let params = AddBookParams {

@@ -1,7 +1,7 @@
-use domain::errors::BookError;
-use domain::interface::{AddBookParams, BookPort};
 use crate::driver::BookDriver;
 use async_trait::async_trait;
+use domain::errors::BookError;
+use domain::interface::{AddBookParams, BookPort};
 
 #[derive(Clone)]
 pub struct BookGateway<T: BookDriver> {

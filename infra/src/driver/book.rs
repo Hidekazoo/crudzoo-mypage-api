@@ -1,9 +1,7 @@
-use sqlx::{PgPool, pool};
-use chrono::Utc;
 use async_trait::async_trait;
+use chrono::Utc;
+use sqlx::{pool, PgPool};
 use std::sync::Arc;
-
-
 
 #[async_trait(?Send)]
 pub trait BookDriver {
@@ -16,7 +14,7 @@ pub struct BookDriverImpl {
 
 #[async_trait(?Send)]
 impl BookDriver for BookDriverImpl {
-     async fn add_book(&self, book_name: &str) -> Result<(), sqlx::Error> {
+    async fn add_book(&self, book_name: &str) -> Result<(), sqlx::Error> {
         sqlx::query!(
             r#"
             INSERT INTO books (title, created_at, updated_at) VALUES ($1, $2, $3)
@@ -30,5 +28,3 @@ impl BookDriver for BookDriverImpl {
         Ok(())
     }
 }
-
-

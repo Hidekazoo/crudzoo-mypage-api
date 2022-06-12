@@ -21,7 +21,7 @@ pub struct ApplicationSettings {
 pub struct Auth0Settings {
     pub audience: String,
     pub domain: String,
-    pub issuer: String
+    pub issuer: String,
 }
 
 #[derive(serde::Deserialize, Clone)]
@@ -68,7 +68,7 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         .unwrap_or_else(|_| "local".into())
         .try_into()
         .expect("Failed to parse APP_ENVIRONMENT.");
-    
+
     let mut last_path = base_path.clone();
     last_path.pop();
     let mut directory_path = "configuration";
