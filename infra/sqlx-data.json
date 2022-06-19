@@ -1,0 +1,123 @@
+{
+  "db": "PostgreSQL",
+  "2d41c82dfdec3f3725503ef20b09c426464eac2c56ee277afac5e9bcfdbb6f5a": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO books (title, created_at, updated_at) VALUES ($1, $2, $3)\n        "
+  },
+  "39770d294302e22b043905f4fb5240b445e73ac8a947abc61e7d8dafc3f2fd43": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n      INSERT INTO daily_condition (weight, sleep_time, mental_score, created_at, updated_at) \n      VALUES ($1, $2, $3, $4, $5)\n      "
+  },
+  "472f7cd885ec1a1e30d285f681f7c1b5088057f894aca02f6e95c6b4e842cb72": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n        SELECT id, name\n        FROM payment_type\n        "
+  },
+  "8f5942a9d655f5d6300c7d5921743a2d247d3b629340f4889ee5d3d40e18658f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "payment_type_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "amount",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "creation_date",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        null
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            SELECT id, payment_type_id, amount, to_char(created_at, 'YYYY-MM-dd') as creation_date FROM payment WHERE user_id = $1\n        "
+  },
+  "b4c751c79db32f340cf44dee91ec1b055a8a90f6af552a9750f95e14764201ba": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO users (email) VALUES ($1)\n        "
+  },
+  "f79a3dfec8263fcb49cd282755815187941ac714ed974a76feee1230a616a549": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO payment (payment_type_id, user_id, amount, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)\n        "
+  }
+}
