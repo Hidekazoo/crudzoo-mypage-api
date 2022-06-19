@@ -7,12 +7,11 @@ use infra::{DailyConditionDriverImpl, DailyConditionGateway};
 use serde::Serialize;
 use sqlx::PgPool;
 
-
 #[derive(serde::Deserialize)]
 pub struct FormData {
-  pub weight: i32,
-  pub sleep_time: i32,
-  pub mental_score: i32,
+    pub weight: i32,
+    pub sleep_time: i32,
+    pub mental_score: i32,
 }
 
 #[derive(Serialize)]
