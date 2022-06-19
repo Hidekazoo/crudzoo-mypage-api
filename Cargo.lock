@@ -1001,7 +1001,11 @@ dependencies = [
  "async-trait",
  "chrono",
  "domain",
+ "mockall",
+ "serde 1.0.136",
  "sqlx",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

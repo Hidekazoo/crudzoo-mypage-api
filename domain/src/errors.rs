@@ -1,3 +1,5 @@
+use thiserror::Error;
+
 #[derive(Clone, PartialEq)]
 pub enum PaymentError {
     // #[error(transparent)]
@@ -32,4 +34,9 @@ impl std::fmt::Debug for BookError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
+}
+#[derive(Clone, PartialEq, Error, Debug)]
+pub enum DailyConditionError {
+    #[error("daily condition unexpected error")]
+    UnexpectedError,
 }

@@ -1,5 +1,7 @@
 use crate::configuration::{DatabaseSettings, Settings};
-use crate::routes::{add_book, add_payment, create_user, find_payment, get_payment_types};
+use crate::routes::{
+    add_book, add_payment, create_user, find_payment, get_payment_types, store_daily_condition,
+};
 use actix_cors::Cors;
 use actix_web::dev::Server;
 use actix_web::{http, web, App, HttpServer};
@@ -27,6 +29,7 @@ pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io:
             .route("/payment", web::post().to(add_payment))
             .route("/user/{id}/payment", web::get().to(find_payment))
             .route("/book", web::post().to(add_book))
+            .route("/daily_condition", web::post().to(store_daily_condition))
             .app_data(connection.clone())
     })
     .listen(listener)?
