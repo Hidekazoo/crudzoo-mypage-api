@@ -1,4 +1,4 @@
-use crate::configuration::{DatabaseSettings, Settings};
+use crate::configuration::{DatabaseSettings, Settings, self, get_configuration};
 use crate::routes::{
     add_book, add_payment, create_user, find_payment, get_payment_types, store_daily_condition,
 };
@@ -12,11 +12,13 @@ use tracing_actix_web::TracingLogger;
 
 pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io::Error> {
     let connection = web::Data::new(connection);
+    let configuration = get_configuration().expect("Failed to read configuration");
+
     let server = HttpServer::new(move || {
         App::new()
             .wrap(
                 Cors::default()
-                    .allowed_origin("http://localhost:8788")
+                    .allowed_origin(&configuration.application.allow_origin)
                     .allowed_methods(vec!["GET", "POST", "OPTIONS"])
                     .allowed_headers(&[http::header::AUTHORIZATION, http::header::ACCEPT])
                     .allowed_header(http::header::CONTENT_TYPE)
