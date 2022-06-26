@@ -45,21 +45,30 @@ struct AddPaymentResponse {
 }
 
 pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> HttpResponse {
+    println!("get payment type");
     let connection_pool = pool.into_inner();
     let db = Database {
         pool: connection_pool,
     };
     let adaptor = PaymentTypeRepository { db };
     let interactor = usecase::PaymentTypeInteractor;
-    let result = interactor.get_payment_types(&adaptor).await.unwrap();
-    let mut payment_types = Vec::new();
-    for v in result.clone() {
-        payment_types.push(PaymentType {
-            id: v.id.0,
-            name: v.name,
-        })
+    return match interactor.get_payment_types(&adaptor).await {
+        Ok(v) => {
+            let mut payment_types = Vec::new();
+            for v in v.clone() {
+                payment_types.push(PaymentType {
+                    id: v.id.0,
+                    name: v.name,
+                })
+            }
+            HttpResponse::Ok().json(GetPaymentTypesResponse { payment_types })
+        },
+        Err(e) => {
+            println!("Failed to get payment type: {:?}", e);
+            HttpResponse::BadRequest().finish()
+        }
     }
-    HttpResponse::Ok().json(GetPaymentTypesResponse { payment_types })
+   
 }
 
 #[derive(serde::Deserialize)]

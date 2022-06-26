@@ -13,7 +13,7 @@ use tracing_actix_web::TracingLogger;
 pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io::Error> {
     let connection = web::Data::new(connection);
     let configuration = get_configuration().expect("Failed to read configuration");
-
+    println!("allows: {:?}", configuration.application.allow_origin);
     let server = HttpServer::new(move || {
         App::new()
             .wrap(
