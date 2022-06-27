@@ -2,6 +2,10 @@ FROM rust:1.61.0 AS builder
 WORKDIR /app
 COPY . .
 ENV SQLX_OFFLINE true
+ENV RUST_BACKTRACE short
+ENV CARGO_INCREMENTAL 0
+ENV CARGO_NET_RETRY 10
+ENV RUSTUP_MAX_RETRIES 10
 RUN cargo build -p api --release
 
 FROM debian:buster-slim AS runtime
