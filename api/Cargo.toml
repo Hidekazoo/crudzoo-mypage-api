@@ -21,6 +21,7 @@ sqlx = {version = "0.5.11", default-features = false, features = [ "runtime-acti
 thiserror = "1.0.30"
 tracing-actix-web = "0.5.1"
 uuid = { version = "0.8.1", features = ["v4", "serde"] }
-
+tracing = { version = "0.1" }
+tracing-subscriber = { version = "0.2"}
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }

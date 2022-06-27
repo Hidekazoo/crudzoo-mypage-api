@@ -8,13 +8,14 @@ use domain::usecase::PaymentInteractor;
 use infra::Database;
 use serde::Serialize;
 use sqlx::PgPool;
+use uuid::Uuid;
 
 #[derive(Serialize)]
 struct UnauthorizedErrorResponse {
     message: String,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, Debug)]
 struct PaymentType {
     id: i32,
     name: String,
@@ -25,7 +26,7 @@ struct GetPaymentTypesResponse {
     payment_types: Vec<PaymentType>,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, Debug)]
 struct Payment {
     id: i32,
     payment_type_id: i32,
@@ -44,8 +45,15 @@ struct AddPaymentResponse {
     amount: i32,
 }
 
+
+#[tracing::instrument(
+    name = "Get payment type", 
+    skip(_claims, pool),
+    fields(
+        request_id = %Uuid::new_v4(),
+    )    
+)]
 pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> HttpResponse {
-    println!("get payment type");
     let connection_pool = pool.into_inner();
     let db = Database {
         pool: connection_pool,
@@ -61,10 +69,11 @@ pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> Http
                     name: v.name,
                 })
             }
+            tracing::info!("get payment type {:?}", payment_types);
             HttpResponse::Ok().json(GetPaymentTypesResponse { payment_types })
         },
         Err(e) => {
-            println!("Failed to get payment type: {:?}", e);
+            tracing::error!("Failed to execute query: {:?}", e);
             HttpResponse::BadRequest().finish()
         }
     }
