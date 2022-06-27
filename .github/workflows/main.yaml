@@ -25,5 +25,5 @@ jobs:
       - name: "Use gcloud CLI"
         run: "gcloud auth configure-docker asia-northeast1-docker.pkg.dev"
 
-      # - name: "Push image"
-      #   run: "docker push ${{ secrets.REGISTRY_NAME }}:latest"
+      - name: "Push image"
+        run: "docker push ${{ secrets.REGISTRY_NAME }}:latest"
