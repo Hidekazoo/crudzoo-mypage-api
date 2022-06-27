@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: "build"
-        run: "docker build -t asia-northeast1-docker.pkg.dev/$PROJECT_NAME/$IMAGE_NAME:latest ."
+        run: "docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.PROJECT_NAME}}/${{ secrets.IMAGE_NAME }}:latest ."
 
       - id: "auth"
         uses: "google-github-actions/auth@v0"
@@ -27,4 +27,4 @@ jobs:
         run: "gcloud auth configure-docker asia-northeast1-docker.pkg.dev"
 
       - name: "Push image"
-        run: "docker push asia-northeast1-docker.pkg.dev/$PROJECT_NAME/$IMAGE_NAME:latest"
+        run: "docker push asia-northeast1-docker.pkg.dev/${{ secrets.PROJECT_NAME}}/${{ secrets.IMAGE_NAME }}:latest"
