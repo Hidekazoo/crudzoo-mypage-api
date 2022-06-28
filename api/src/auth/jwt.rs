@@ -32,7 +32,10 @@ pub fn get_token(req: &HttpRequest) -> Result<String, bool> {
 
             Ok(jwt.to_string())
         }
-        _ => Err(false),
+        _ => {
+            tracing::error!("Failed to get token");
+            Err(false)
+        },
     }
 }
 
@@ -50,9 +53,12 @@ pub async fn validate_jwt_token(
     let config = get_configuration().unwrap();
     let header = match decode_header(token) {
         Ok(v) => v,
-        Err(_) => return Err(ValidationError::DecodeError),
+        Err(_) => {
+            tracing::error!("Failed Validation");
+            return Err(ValidationError::DecodeError)
+        },
     };
-    let kid = header.kid.ok_or({ ValidationError::DecodeError })?;
+    let kid = header.kid.ok_or(ValidationError::DecodeError)?;
     let token: String = token.to_string();
     let jwks: JwkSet = Client::new()
         .get(format!("{}", config.auth0_settings.domain))

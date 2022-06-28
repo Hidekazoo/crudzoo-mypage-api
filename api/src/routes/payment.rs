@@ -80,13 +80,23 @@ pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> Http
    
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct AddPaymentFormData {
     pub payment_type_id: i32,
     pub user_id: i32,
     pub amount: i32,
 }
 
+#[tracing::instrument(
+    name = "Add payment", 
+    skip(_claims, pool),
+    fields(
+        request_id = %Uuid::new_v4(),
+        payment_type_id=tracing::field::Empty,
+        user_id=tracing::field::Empty,
+        amount=tracing::field::Empty
+    )    
+)]
 pub async fn add_payment(
     _claims: Claims,
     pool: web::Data<PgPool>,
@@ -113,7 +123,13 @@ pub async fn add_payment(
                 amount: form.amount,
             }),
         Err(PaymentError::PaymentCreationError) => HttpResponse::InternalServerError().finish(),
-        Err(_) => HttpResponse::InternalServerError().finish(),
+        Err(error) => {
+            tracing::warn!(
+                error.cause_chain = ?error,
+                "Failed to Add Payment."
+            );
+            HttpResponse::InternalServerError().finish()
+        },
     };
 }
 
