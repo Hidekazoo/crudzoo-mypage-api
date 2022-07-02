@@ -46,4 +46,16 @@ pub trait PaymentUsecase {
         payment_dao: &dyn PaymentDao,
         params: &FindPaymentParams,
     ) -> Result<Vec<Payment>, PaymentError>;
+    async fn store(&self, store_payment_port: &dyn StorePayment, params: &StorePaymentData) -> Result<(), PaymentError>;
+}
+
+pub struct StorePaymentData {
+    pub payment_type_id: i32,
+    pub amount: i32,
+}
+
+#[automock]
+#[async_trait(?Send)]
+pub trait StorePayment {
+    async fn store(&self, data: &StorePaymentData) -> Result<(), PaymentError>;
 }

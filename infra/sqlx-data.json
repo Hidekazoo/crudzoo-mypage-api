@@ -54,44 +54,6 @@
     },
     "query": "\n        SELECT id, name\n        FROM payment_type\n        "
   },
-  "8f5942a9d655f5d6300c7d5921743a2d247d3b629340f4889ee5d3d40e18658f": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int4"
-        },
-        {
-          "name": "payment_type_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "amount",
-          "ordinal": 2,
-          "type_info": "Int4"
-        },
-        {
-          "name": "creation_date",
-          "ordinal": 3,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        null
-      ],
-      "parameters": {
-        "Left": [
-          "Int4"
-        ]
-      }
-    },
-    "query": "\n            SELECT id, payment_type_id, amount, to_char(created_at, 'YYYY-MM-dd') as creation_date FROM payment WHERE user_id = $1\n        "
-  },
   "b4c751c79db32f340cf44dee91ec1b055a8a90f6af552a9750f95e14764201ba": {
     "describe": {
       "columns": [],
@@ -104,7 +66,7 @@
     },
     "query": "\n            INSERT INTO users (email) VALUES ($1)\n        "
   },
-  "f79a3dfec8263fcb49cd282755815187941ac714ed974a76feee1230a616a549": {
+  "e322861806b2c291f2f435764af48c0922c9d6771a1960f3062ce238fa6caceb": {
     "describe": {
       "columns": [],
       "nullable": [],
@@ -112,12 +74,11 @@
         "Left": [
           "Int4",
           "Int4",
-          "Int4",
           "Timestamptz",
           "Timestamptz"
         ]
       }
     },
-    "query": "\n            INSERT INTO payment (payment_type_id, user_id, amount, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)\n        "
+    "query": "\n        INSERT INTO payment (payment_type_id, amount, created_at, updated_at) VALUES ($1, $2, $3, $4)\n      "
   }
 }

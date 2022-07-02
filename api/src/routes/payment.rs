@@ -2,10 +2,10 @@ use crate::adaptor::{PaymentRepository, PaymentTypeRepository};
 use crate::auth::claims::Claims;
 use actix_web::{web, HttpResponse};
 use domain::errors::PaymentError;
-use domain::interface::{AddPayment, FindPaymentParams, PaymentTypeUsecase, PaymentUsecase};
+use domain::interface::{AddPayment, FindPaymentParams, PaymentTypeUsecase, PaymentUsecase, StorePaymentData, StorePayment};
 use domain::usecase;
 use domain::usecase::PaymentInteractor;
-use infra::Database;
+use infra::{Database, PaymentDriverImpl, PaymentGateway};
 use serde::Serialize;
 use sqlx::PgPool;
 use uuid::Uuid;
@@ -83,7 +83,6 @@ pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> Http
 #[derive(serde::Deserialize, Debug)]
 pub struct AddPaymentFormData {
     pub payment_type_id: i32,
-    pub user_id: i32,
     pub amount: i32,
 }
 
@@ -103,19 +102,18 @@ pub async fn add_payment(
     form: web::Json<AddPaymentFormData>,
 ) -> HttpResponse {
     let connection_pool = pool.into_inner();
-    let db = Database {
-        pool: connection_pool,
-    };
-    let adaptor = PaymentRepository { db };
+    let adaptor = PaymentGateway { 
+        payment_driver: PaymentDriverImpl {
+            pool: connection_pool
+        }
+     };
     let interactor = PaymentInteractor;
-
-    let params = AddPayment {
+    let params = StorePaymentData {
         payment_type_id: form.payment_type_id,
-        user_id: form.user_id,
         amount: form.amount,
     };
 
-    return match interactor.add_payment(&adaptor, &params).await {
+    return match interactor.store(&adaptor, &params).await {
         Ok(_) => HttpResponse::Ok()
             .content_type("application/json")
             .json(AddPaymentResponse {
@@ -133,28 +131,28 @@ pub async fn add_payment(
     };
 }
 
-pub async fn find_payment(
-    _claims: Claims,
-    pool: web::Data<PgPool>,
-    path: web::Path<i32>,
-) -> HttpResponse {
-    let connection_pool = pool.into_inner();
-    let db = Database {
-        pool: connection_pool,
-    };
-    let adaptor = PaymentRepository { db };
-    let user_id = path.into_inner();
-    let params = FindPaymentParams { user_id };
-    let interactor = usecase::PaymentInteractor;
-    let result = interactor.find_payment(&adaptor, &params).await.unwrap();
-    let mut payment = vec![];
-    for v in result.clone() {
-        payment.push(Payment {
-            id: v.id.0,
-            payment_type_id: v.payment_type_id.0,
-            amount: v.amount,
-            creation_date: v.creation_date,
-        })
-    }
-    HttpResponse::Ok().json(FindPaymentResponse { payment })
-}
+// pub async fn find_payment(
+//     _claims: Claims,
+//     pool: web::Data<PgPool>,
+//     path: web::Path<i32>,
+// ) -> HttpResponse {
+//     let connection_pool = pool.into_inner();
+//     let db = Database {
+//         pool: connection_pool,
+//     };
+//     let adaptor = PaymentRepository { db };
+//     let user_id = path.into_inner();
+//     let params = FindPaymentParams { user_id };
+//     let interactor = usecase::PaymentInteractor;
+//     let result = interactor.find_payment(&adaptor, &params).await.unwrap();
+//     let mut payment = vec![];
+//     for v in result.clone() {
+//         payment.push(Payment {
+//             id: v.id.0,
+//             payment_type_id: v.payment_type_id.0,
+//             amount: v.amount,
+//             creation_date: v.creation_date,
+//         })
+//     }
+//     HttpResponse::Ok().json(FindPaymentResponse { payment })
+// }

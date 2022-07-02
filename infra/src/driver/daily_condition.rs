@@ -1,9 +1,9 @@
 use async_trait::async_trait;
 use chrono::Utc;
 use mockall::automock;
-use sqlx::{pool, PgPool};
+use sqlx::PgPool;
 use std::sync::Arc;
-use thiserror::Error;
+
 
 pub struct NewDailyCondition {
     pub weight: i32,
