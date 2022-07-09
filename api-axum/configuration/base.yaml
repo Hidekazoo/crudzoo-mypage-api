@@ -1,0 +1,15 @@
+application:
+  port: 8080
+  allow_origin: "http://localhost:8788"
+database:
+  host: "127.0.0.1"
+  port: 5432
+  username: "postgres"
+  password: "password"
+  database_name: "mypage"
+  socket: ""
+  require_ssl: false
+auth0_settings:
+  audience: ""
+  issuer: ""
+  domain: ""

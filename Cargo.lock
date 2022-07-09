@@ -280,12 +280,18 @@ dependencies = [
 name = "api-axum"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "axum",
+ "chrono",
+ "config",
  "headers",
  "jsonwebtoken",
  "once_cell",
+ "reqwest",
  "serde 1.0.136",
+ "serde-aux",
  "serde_json",
+ "sqlx",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.11",
