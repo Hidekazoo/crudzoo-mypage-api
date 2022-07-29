@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+domain = {path = "../domain" }
+infra = {path = "../infra"}
 async-trait = "0.1.52"
 axum = { version = "0.5.11", features = ["headers"] }
 chrono = "0.4.19"
