@@ -1,7 +1,7 @@
 use crate::entity::{Payment, PaymentType};
 use crate::errors::PaymentError;
-use crate::interface::{PaymentTypeUsecase, StorePaymentData, StorePayment};
 use crate::interface::{AddPayment, FindPaymentParams, PaymentDao, PaymentTypeDao, PaymentUsecase};
+use crate::interface::{PaymentTypeUsecase, StorePayment, StorePaymentData};
 use async_trait::async_trait;
 
 #[derive(Debug)]
@@ -44,11 +44,15 @@ impl PaymentUsecase for PaymentInteractor {
             _ => Err(PaymentError::FindPaymentError),
         }
     }
-    async fn store(&self, store_payment_port: &dyn StorePayment, params: &StorePaymentData) -> Result<(), PaymentError> {
+    async fn store(
+        &self,
+        store_payment_port: &dyn StorePayment,
+        params: &StorePaymentData,
+    ) -> Result<(), PaymentError> {
         return match store_payment_port.store(params).await {
             Ok(_) => Ok(()),
-            _ => Err(PaymentError::UnexpectedError)
-        }
+            _ => Err(PaymentError::UnexpectedError),
+        };
         // Err(PaymentError::PaymentCreationError)
     }
 }

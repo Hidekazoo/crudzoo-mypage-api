@@ -35,7 +35,7 @@ pub fn get_token(req: &HttpRequest) -> Result<String, bool> {
         _ => {
             tracing::error!("Failed to get token");
             Err(false)
-        },
+        }
     }
 }
 
@@ -55,8 +55,8 @@ pub async fn validate_jwt_token(
         Ok(v) => v,
         Err(_) => {
             tracing::error!("Failed Validation");
-            return Err(ValidationError::DecodeError)
-        },
+            return Err(ValidationError::DecodeError);
+        }
     };
     let kid = header.kid.ok_or(ValidationError::DecodeError)?;
     let token: String = token.to_string();

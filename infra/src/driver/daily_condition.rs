@@ -4,7 +4,6 @@ use mockall::automock;
 use sqlx::PgPool;
 use std::sync::Arc;
 
-
 pub struct NewDailyCondition {
     pub weight: i32,
     pub sleep_time: i32,

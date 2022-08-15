@@ -48,8 +48,7 @@ where
             Ok(v) => Ok(v),
             Err(ValidationError::TokenExpired) => Err(AuthError::MissingCredentials),
             Err(ValidationError::InvalidToken) => Err(AuthError::InvalidToken),
-            _ => Err(AuthError::UnExpected)
-            
+            _ => Err(AuthError::UnExpected),
         }
         // })
     }

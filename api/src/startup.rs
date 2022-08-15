@@ -1,6 +1,6 @@
-use crate::configuration::{DatabaseSettings, Settings, get_configuration};
+use crate::configuration::{get_configuration, DatabaseSettings, Settings};
 use crate::routes::{
-    add_book, add_payment, create_user, get_payment_types, store_daily_condition, health_check,
+    add_book, add_payment, create_user, get_payment_types, health_check, store_daily_condition,
 };
 use actix_cors::Cors;
 use actix_web::dev::Server;

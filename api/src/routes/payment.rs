@@ -2,7 +2,10 @@ use crate::adaptor::{PaymentRepository, PaymentTypeRepository};
 use crate::auth::claims::Claims;
 use actix_web::{web, HttpResponse};
 use domain::errors::PaymentError;
-use domain::interface::{AddPayment, FindPaymentParams, PaymentTypeUsecase, PaymentUsecase, StorePaymentData, StorePayment};
+use domain::interface::{
+    AddPayment, FindPaymentParams, PaymentTypeUsecase, PaymentUsecase, StorePayment,
+    StorePaymentData,
+};
 use domain::usecase;
 use domain::usecase::PaymentInteractor;
 use infra::{Database, PaymentDriverImpl, PaymentGateway};
@@ -45,7 +48,6 @@ struct AddPaymentResponse {
     amount: i32,
 }
 
-
 #[tracing::instrument(
     name = "Get payment type", 
     skip(_claims, pool),
@@ -71,13 +73,12 @@ pub async fn get_payment_types(_claims: Claims, pool: web::Data<PgPool>) -> Http
             }
             tracing::info!("get payment type {:?}", payment_types);
             HttpResponse::Ok().json(GetPaymentTypesResponse { payment_types })
-        },
+        }
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
             HttpResponse::BadRequest().finish()
         }
-    }
-   
+    };
 }
 
 #[derive(serde::Deserialize, Debug)]
@@ -102,11 +103,11 @@ pub async fn add_payment(
     form: web::Json<AddPaymentFormData>,
 ) -> HttpResponse {
     let connection_pool = pool.into_inner();
-    let adaptor = PaymentGateway { 
+    let adaptor = PaymentGateway {
         payment_driver: PaymentDriverImpl {
-            pool: connection_pool
-        }
-     };
+            pool: connection_pool,
+        },
+    };
     let interactor = PaymentInteractor;
     let params = StorePaymentData {
         payment_type_id: form.payment_type_id,
@@ -127,7 +128,7 @@ pub async fn add_payment(
                 "Failed to Add Payment."
             );
             HttpResponse::InternalServerError().finish()
-        },
+        }
     };
 }
 

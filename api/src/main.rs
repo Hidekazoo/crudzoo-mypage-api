@@ -9,8 +9,8 @@ use tracing_subscriber::{self, FmtSubscriber};
 async fn main() -> std::io::Result<()> {
     // tracing_subscriber::fmt::init();
     let subscriber = FmtSubscriber::builder()
-    .with_max_level(Level::TRACE)
-    .finish();
+        .with_max_level(Level::TRACE)
+        .finish();
     tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
     let configuration = get_configuration().expect("Failed to read configuration.");
     let connection_pool = PgPoolOptions::new()

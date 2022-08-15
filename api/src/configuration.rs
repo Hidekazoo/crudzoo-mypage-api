@@ -15,7 +15,7 @@ pub struct ApplicationSettings {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
-    pub allow_origin: String
+    pub allow_origin: String,
 }
 
 #[derive(Deserialize, Clone, Debug)]
