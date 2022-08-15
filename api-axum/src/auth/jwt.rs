@@ -50,11 +50,11 @@ pub async fn validate_jwt_token(
                         }
                         Err(ValidationError::TokenExpired)
                     }
-                    Err(e) => return Err(ValidationError::InvalidToken),
+                    Err(_) => return Err(ValidationError::InvalidToken),
                 };
             }
             Err(ValidationError::InvalidToken)
         }
-        e => Err(ValidationError::Unexpected),
+        _ => Err(ValidationError::Unexpected),
     }
 }

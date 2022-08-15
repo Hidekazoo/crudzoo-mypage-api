@@ -1,7 +1,7 @@
 use crate::payment::{
     get_payment_types as db_get_payment_type,
 };
-use domain::interface::{FindPayment, DB};
+use domain::interface::DB;
 use sqlx::PgPool;
 use std::sync::Arc;
 

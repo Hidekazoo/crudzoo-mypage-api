@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use chrono::Utc;
-use sqlx::{pool, PgPool};
+use sqlx::PgPool;
 use std::sync::Arc;
 
 #[async_trait(?Send)]

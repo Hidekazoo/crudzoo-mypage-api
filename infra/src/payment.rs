@@ -1,4 +1,3 @@
-use chrono::Utc;
 use domain::errors::PaymentError;
 use domain::interface::GetPaymentType;
 use sqlx::PgPool;
