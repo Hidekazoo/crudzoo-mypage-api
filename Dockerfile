@@ -16,6 +16,6 @@ RUN apt-get update -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/release/api-axum crudzoo-mypage-api
-COPY /api/configuration /app/api/configuration
+COPY /api-axum/configuration /app/api-axum/configuration
 ENV APP_ENVIRONMENT production
 ENTRYPOINT [ "./crudzoo-mypage-api" ]
