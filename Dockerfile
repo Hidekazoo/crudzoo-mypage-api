@@ -15,7 +15,7 @@ RUN apt-get update -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/release/api crudzoo-mypage-api
+COPY --from=builder /app/target/release/api-axum crudzoo-mypage-api
 COPY /api/configuration /app/api/configuration
 ENV APP_ENVIRONMENT production
 ENTRYPOINT [ "./crudzoo-mypage-api" ]
