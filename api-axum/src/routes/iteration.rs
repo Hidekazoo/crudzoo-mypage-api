@@ -23,7 +23,6 @@ pub async fn post_iteration(
     Extension(pool): Extension<PgPool>,
     Json(payload): Json<PostIteration>,
 ) -> impl IntoResponse {
-  println!("==============================");
     let start_date = payload.start_date;
     let end_date = payload.end_date;
     let iteration = Iteration::new(start_date, end_date, payload.hours);
