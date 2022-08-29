@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 
-use api_axum::{auth::claims::Claims, configuration::get_configuration, routes::get_payment_types};
-use axum::{http::StatusCode, response::IntoResponse, routing::get, Extension, Router};
+use api_axum::{auth::claims::Claims, configuration::get_configuration, routes::{get_payment_types, post_iteration}};
+use axum::{http::StatusCode, response::IntoResponse, routing::{get, post}, Extension, Router};
 use sqlx::postgres::PgPoolOptions;
 use tracing::Level;
 use tracing_subscriber::FmtSubscriber;
@@ -24,6 +24,7 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/payment_type", get(get_payment_types))
+        .route("/iteration", post(post_iteration))
         .layer(Extension(connection_pool));
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     tracing::debug!("listening on {}", addr);

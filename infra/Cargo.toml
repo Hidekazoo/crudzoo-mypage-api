@@ -13,6 +13,8 @@ chrono = "0.4.19"
 mockall = "0.11.0"
 serde = {version = "1.0", features = ["derive"] }
 thiserror="1"
-
+anyhow = "1.0.56"
+uuid = { version = "0.8.1", features = ["v4", "serde"] }
 [dev-dependencies]
 tokio = {version="1.17.0", features = ["macros", "rt-multi-thread"]}
+faux = "^0.1"
