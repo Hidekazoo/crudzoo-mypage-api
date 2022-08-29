@@ -1,7 +1,16 @@
 use std::net::SocketAddr;
 
-use api_axum::{auth::claims::Claims, configuration::get_configuration, routes::{get_payment_types, post_iteration}};
-use axum::{http::StatusCode, response::IntoResponse, routing::{get, post}, Extension, Router};
+use api_axum::{
+    auth::claims::Claims,
+    configuration::get_configuration,
+    routes::{get_payment_types, post_iteration},
+};
+use axum::{
+    http::StatusCode,
+    response::IntoResponse,
+    routing::{get, post},
+    Extension, Router,
+};
 use sqlx::postgres::PgPoolOptions;
 use tracing::Level;
 use tracing_subscriber::FmtSubscriber;

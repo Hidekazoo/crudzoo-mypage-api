@@ -1,5 +1,4 @@
 use chrono::{DateTime, Utc};
-use mockall::automock;
 
 #[cfg_attr(test, faux::create)]
 pub struct Iteration {
