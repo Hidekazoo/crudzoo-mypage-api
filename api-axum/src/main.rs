@@ -1,5 +1,3 @@
-use std::net::SocketAddr;
-
 use api_axum::{
     auth::claims::Claims,
     configuration::get_configuration,
@@ -35,7 +33,8 @@ async fn main() {
         .route("/payment_type", get(get_payment_types))
         .route("/iteration", post(post_iteration))
         .layer(Extension(connection_pool));
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+    let addr = format!("{}:{}",configuration.application.host, configuration.application.port);
+    let addr = addr.parse().expect("unable to parse socket address");
     tracing::debug!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
